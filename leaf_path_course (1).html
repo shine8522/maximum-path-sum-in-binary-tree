@@ -1,0 +1,160 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Max Leaf-to-Leaf Path Sum · ShineExplains</title>
+<style>
+:root{--cy:#22d3ee;--y:#facc15;--g:#22c55e;--m:#f472b6;--r:#ef4444;--o:#fb923c}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% 0,#0e2347,#050b1f 60%) fixed;color:#e8f1ff;font:clamp(15px,2.4vw,18px)/1.5 system-ui,Arial,sans-serif;min-height:100vh;padding-bottom:calc(86px + env(safe-area-inset-bottom,0px))}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 14px;padding-top:calc(10px + env(safe-area-inset-top,0px))}
+.brand{color:var(--cy);letter-spacing:.2em;font-weight:800;font-size:.8em;opacity:.8}nav{display:flex;gap:6px;flex-wrap:wrap}
+button,select,textarea{font:inherit;color:#e6f6ff;background:#0f2a52;border:1px solid #22d3ee55;border-radius:12px;padding:8px 12px}button{cursor:pointer}button:hover{border-color:var(--cy)}button.on{background:#155e75;border-color:var(--cy)}
+#prog{margin:0 14px;height:8px;background:#0b1a3a;border-radius:8px;overflow:hidden}#pb{height:100%;width:0;background:linear-gradient(90deg,var(--cy),var(--g));transition:width .3s}#pt{margin:4px 14px;font-size:.8em;color:#9fb8d8}
+#m{display:grid;gap:14px;padding:12px 14px;max-width:1200px;margin:auto;grid-template-columns:1fr}@media(min-width:900px){#m{grid-template-columns:1.1fr 1fr}#code,#quiz{grid-column:1/-1}}
+.card{background:#0a1a3a;border:1px solid #1d4a73;border-radius:18px;padding:14px;min-width:0}
+#tr{width:100%;height:auto;max-height:62vh;display:block}#badge{min-height:1.6em;color:var(--y);font-weight:700;text-align:center}
+h2{margin:0 0 6px;font-size:clamp(20px,4.5vw,28px);color:var(--y)}#say{margin:0 0 8px}#eq div{font-size:clamp(18px,4.4vw,30px);font-weight:800;margin:4px 0;color:#fff}
+.hint{color:#9fb8d8;font-size:.9em}.k{border-radius:12px;padding:10px;margin:8px 0;border:1px solid #1d4a73;background:#071331}
+#cd{font:clamp(12px,2.8vw,14px)/1.6 ui-monospace,Menlo,Consolas,monospace;overflow:auto;max-height:46vh;margin:0;padding:6px 0}.cl{white-space:pre;padding:0 8px;border-radius:6px;cursor:pointer;min-height:1.6em}.cl:hover{background:#12315a}.cl.on{background:#22d3ee30;outline:1px solid var(--cy)}
+#le{margin-top:8px;padding:10px;border-radius:12px;background:#071331;border:1px solid #1d4a73}
+table{width:100%;border-collapse:collapse}td{padding:3px 6px;border-bottom:1px solid #12315a}td:first-child{color:#9fb8d8}
+.st{padding:4px 8px;margin:3px 0;border-radius:8px;background:#0f2a52;border-left:4px solid var(--cy)}
+.q button{display:block;width:100%;text-align:left;margin:6px 0}.ok{background:#14532d!important;border-color:var(--g)!important}.bad{background:#5b1212!important;border-color:var(--r)!important}
+#bar{position:fixed;left:0;right:0;bottom:0;display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));background:#050b1fee;border-top:1px solid #12315a}
+textarea{width:100%;min-height:80px}.hid{display:none!important}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style></head><body>
+<header><span class="brand">SHINEEXPLAINS</span><nav id="tabs"><button data-t="learn">Learn</button><button data-t="run">Run &amp; Code</button><button data-t="quiz">Quiz</button></nav></header>
+<div id="prog"><div id="pb"></div></div><div id="pt"></div>
+<main id="m">
+<section id="vis" class="card"><svg id="tr" viewBox="0 0 500 340" role="img" aria-label="Binary tree"></svg><div id="badge"></div></section>
+<section id="info" class="card"><h2 id="ti"></h2><p id="say"></p><div id="eq"></div><button id="rv" class="hid">Reveal Answer</button><div id="ex"></div>
+<div id="runbox" class="hid"><label>Test tree: <select id="cs"></select></label><div id="why" class="k"></div><table id="state"></table><div id="stack"></div></div></section>
+<section id="code" class="card hid"><div id="cd"></div><div id="le" class="hint">Kisi bhi code line par click karo — explanation yahan aayega.</div></section>
+<section id="quiz" class="card hid"></section>
+</main>
+<div id="bar"><button id="pv" aria-label="Previous step">⏮ Prev</button><button id="pp">▶ Play</button><button id="nx" aria-label="Next step">Next ⏭</button><button id="rp">↺ Replay</button><button id="rs">Reset</button>
+<select id="sp" aria-label="Speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select></div>
+<script>
+const $=i=>document.getElementById(i),NS='http://www.w3.org/2000/svg',COL={cy:'#22d3ee',y:'#facc15',g:'#22c55e',m:'#f472b6',r:'#ef4444',o:'#fb923c',w:'#e8f1ff'};
+let uid=0;const n=(v,l,r,id)=>({v,l:l||null,r:r||null,id:id||'n'+(++uid)}),fm=x=>x<0?'−'+(-x):''+x;
+const MAIN=n(3,n(4,n(-10,0,0,'l'),n(4,0,0,'b'),'a'),n(5,0,0,'c'),'r'),BP=['b','a','r','c'];
+const BIG=n(1,n(2,n(4,n(8),n(9)),n(5,n(10),n(11))),n(3,n(6,n(12),n(13)),n(7,n(14),n(15))));
+//SOLVE
+function simulate(root){const ev=[],dp={};
+ function f(x){ev.push({k:'enter',id:x.id,v:x.v});let L=null,R=null;
+  if(x.l)L=f(x.l);else if(x.r)ev.push({k:'null',id:x.id,v:x.v,side:'left'});
+  if(x.r)R=f(x.r);else if(x.l)ev.push({k:'null',id:x.id,v:x.v,side:'right'});
+  let r;
+  if(!x.l&&!x.r){dp[x.id]=[x.id];r={down:x.v,best:null};ev.push({k:'ret',id:x.id,v:x.v,kind:'leaf',down:x.v,best:null,d:dp[x.id],c:null})}
+  else if(L&&R){const cand=L.down+x.v+R.down;let best=cand;if(L.best!==null)best=Math.max(best,L.best);if(R.best!==null)best=Math.max(best,R.best);
+   const ch=L.down>=R.down?x.l:x.r;dp[x.id]=[x.id].concat(dp[ch.id]);const cp=dp[x.l.id].slice().reverse().concat([x.id],dp[x.r.id]);
+   r={down:x.v+Math.max(L.down,R.down),best};ev.push({k:'ret',id:x.id,v:x.v,kind:'two',a:L.down,b:R.down,cand,down:r.down,best,d:dp[x.id],c:cp})}
+  else{const C=L||R,ch=x.l||x.r;dp[x.id]=[x.id].concat(dp[ch.id]);r={down:x.v+C.down,best:C.best};ev.push({k:'ret',id:x.id,v:x.v,kind:x.l?'oneL':'oneR',a:C.down,down:r.down,best:r.best,d:dp[x.id],c:null})}
+  return r}
+ const res=root?f(root):{down:0,best:null};ev.push({k:'done',best:res.best});return{ev,best:res.best}}
+//ENDSOLVE
+const c=(t,e)=>[t,e||''];
+const CODE=[c('/* Node Structure','Platform ka diya hua Node comment. Tree ka ek node: ek value aur do child links.'),c('class Node {','Node = tree ka ek point.'),c('    int data;','Node ki value, jaise 3 ya -10.'),c('    Node left;','Left child. Child na ho toh null.'),c('    Node right;','Right child.'),c(''),c('    Node(int data) {','Constructor: naya node banata hai.'),c('        this.data = data;','Value store karta hai.'),c('        left = nullptr;','Naya node bina children ke banta hai: left null.'),c('        right = nullptr;','Right bhi null. Dono null = leaf, isi se leaf pehchante hain.'),c('    }'),c('}'),c('*/'),c(''),
+c('class Solution {','Platform isi class ke andar function maangta hai.'),c('  public:'),c('  int ans=INT_MIN;','Global best answer. INT_MIN se shuru, 0 se nahi, taaki sab negative hon tab bhi sahi chale. Subtree ke andar ke best paths bhi yahin jama rehte hain, isliye alag compare ki zaroorat nahi.'),
+c('  int find(Node *root){','Postorder helper: root se neeche kisi leaf tak best sum lautata hai (sirf ek branch). Poore tree ka answer ans me jama hota hai.'),
+c('      if(root->left==NULL && root->right==NULL)return root->data;','Dono children nahi = leaf. Apni value down-sum ke roop me return. ans update nahi hota kyunki akela leaf path nahi hai. Main tree me: -10, 4 (right wala), 5.'),c(''),
+c('     int ll=INT_MIN, rr=INT_MIN;','Left/right best sums. INT_MIN = "is side me kuch nahi". 0 nahi, kyunki 0 ek real sum ban jata. Candidate sirf tab banta hai jab dono sides sach me exist karein.'),
+c('     if(root->left)','Left child ho tabhi recursion. Null par find call karoge toh crash (find root->left padhta hai).'),c('       ll=find(root->left);','Left subtree ka best downward sum. Example: node (4) ke liye ll = -10.'),
+c('     if(root->right)','Right child ho tabhi recursion.'),c('       rr=find(root->right);','Right subtree ka best downward sum. Example: rr = 4.'),
+c('     if(root->left && root->right){','Dono children hain: ab complete leaf-to-leaf path bana sakte hain.'),
+c('       ans=max(ans, root->data+ll+rr);','Candidate = left + node + right: current node se guzarta ek complete leaf-to-leaf path. Dono sides zaroori. max se purana ans bacha rehta hai (best path ek subtree me bhi ho sakta hai). Example: -10 + 4 + 4 = -2; root pe 8 + 3 + 5 = 16.'),
+c('       return root->data+max(ll,rr);','Parent ko sirf EK best downward path: value + max(ll, rr). Candidate (dono sides) return nahi hota: parent branching path nahi bana sakta. Example: 4 + max(-10, 4) = 8; root: 3 + max(8, 5) = 11.'),c('     }','Dono-children wala block khatam.'),
+c('     if(!root->right){','Yahan sirf left child hai (dono-wala case upar nikal gaya, leaf bhi nahi).'),c('         return ll+root->data;','Ek hi side hai, wahi continue. Candidate nahi banta kyunki doosri side me leaf nahi. Missing side ko 0 maanna galat.'),c('     }'),c('     return rr+root->data;','Yahan sirf right child hai: wahi side continue.'),c('  }','find() khatam.'),
+c('    int maxPathSum(Node *root) {','Platform ka entry function.'),c('        // code here','Platform ka comment: yahan solution likhna hai.'),
+c('        find(root);','Poore tree par recursion chalao; ans bharta hai. find() ki return value yahan answer nahi hai. WARNING: empty tree me root null hai aur find(root) root->left padhta hai, yaani crash. Null check find se PEHLE hona chahiye.'),
+c('        if(root==NULL)return 0;','Empty-tree guard. Abhi find ke baad hai, isliye kaam ka nahi: crash pehle ho chuka hota hai. Ise find(root) se upar le jao.'),
+c('        if(ans==INT_MIN)return -1;','ans kabhi update nahi hua = koi valid leaf-to-leaf path nahi (single leaf, ya ek-child chain). Platform convention: -1. Dhyan: -1 ek real sum bhi ho sakta hai, isliye ye sirf tab theek hai jab platform guarantee de.'),
+c('        return ans;','Best leaf-to-leaf path sum lautao.'),c('    }'),c('};')];
+const li=t=>CODE.findIndex(l=>l[0].trim()==t);
+const LN={enter:li('int find(Node *root){'),nulleft:li('if(root->left)'),nullright:li('if(root->right)'),leaf:li('if(root->left==NULL && root->right==NULL)return root->data;'),two:li('ans=max(ans, root->data+ll+rr);'),oneL:li('return ll+root->data;'),oneR:li('return rr+root->data;'),done:li('return ans;'),none:li('if(ans==INT_MIN)return -1;')};
+const FR=[];const F=(t,o)=>FR.push(Object.assign({t},o));
+F('Hook',{say:'Kaunsa leaf-to-leaf path maximum sum dega? Pehle khud guess karo, phir Reveal dabao.',rev:{say:'Answer: 4 → 4 → 3 → 5 = 16',P:[[BP,'g']],eq:['Maximum = 16']},ex:'<p class="hint">Problem: binary tree me do leaf nodes ko jodne wale path ka maximum sum.</p><button onclick="step(1)">Start Learning</button> <button onclick="setTab(\'run\')">Skip to Code</button>'});
+F('Leaf nodes',{say:'Leaf woh node hota hai jiske left aur right dono children nahi hote. Kisi bhi node par click karke check karo.',N:{l:'g',b:'g',c:'g',r:'o',a:'o'},lab:{l:'leaf',b:'leaf',c:'leaf',a:'internal',r:'internal'}});
+[['l'],['l','a'],['l','a','r'],['l','a','r','c']].forEach((p,i)=>F('Valid path sum',{say:i<3?'Path sum = path ke har node ki value ek baar add karo.':'Path leaf se leaf tak gaya: -10 → 4 → 3 → 5.',P:[[p,'y']],eq:[['−10','−10 + 4 = −6','−6 + 3 = −3','−3 + 5 = 2'][i]],dim:1}));
+F('Leaf-to-leaf condition',{say:'Path leaf se shuru hona chahiye aur doosre leaf par khatam. Ye "kisi bhi do nodes" wali standard max path sum problem se alag hai.',P:[[['a','r','c'],'r']],eq:['✗ internal node se start'],dim:1});
+F('Leaf-to-leaf condition',{say:'Internal node par khatam hone wala path bhi invalid hai.',P:[[['l','a','r'],'r']],eq:['✗ internal node par end'],dim:1});
+F('Leaf-to-leaf condition',{say:'Valid: dono endpoints leaf hain.',P:[[['l','a','r','c'],'g']],eq:['✓ leaf → leaf'],dim:1});
+[[['l','a','b'],'y','−10 + 4 + 4 = −2'],[['l','a','r','c'],'y','−10 + 4 + 3 + 5 = 2'],[BP,'g','4 + 4 + 3 + 5 = 16']].forEach((q,i)=>F('Try every leaf pair',{say:'Pair '+(i+1)+'/3: actual tree edges ke saath path aur uska sum.',P:[[q[0],q[1]]],eq:[q[2]],dim:1}));
+F('Brute-force limit',{tree:'big',say:'L leaves ho toh L × (L − 1) / 2 pairs hote hain. Har pair ka path dhoondhna aur sum karna alag kharcha hai, isliye total time is par depend karta hai ki paths kaise nikalte ho. Kya recursion me bachi hui info reuse kar sakte hain?',eq:['8 leaves → 8 × 7 / 2 = 28 pairs']});
+F('Start at a node',{say:'Ab kisi ek node par khade ho jao: iske left aur right dono taraf children hain.',N:{a:'y',l:'cy',b:'g'},lab:{a:'current',l:'left',b:'right'},dim:1});
+F('Connect both sides',{say:'Left se ek leaf aur right se ek leaf jodo — current node ke through. Leaves ke beech direct edge nahi hoti.',P:[[['l','a','b'],'m']],N:{a:'y'},dim:1});
+F('Candidate',{say:'Complete candidate banane ka formula:',eq:['candidate = leftBest + nodeValue + rightBest'],N:{a:'y'},dim:1});
+F('Candidate',{say:'Ye candidate sirf global answer improve karne ke liye hai, parent ko return nahi hota.',P:[[['l','a','b'],'m']],eq:['candidate = −10 + 4 + 4 = −2','Complete candidate path'],N:{a:'y'},dim:1});
+F('Parent needs ONE path',{say:'Parent ko path aage continue karna hai. Dono branches return karein toh ek single continuous path nahi rahega. Tum predict karo: kaunsi branch?',N:{r:'w',a:'y'},lab:{r:'parent'},up:['a','r','Recursive return'],dim:1});
+F('Best downward branch',{say:'Dono me se best ek side choose karo (4 > −10) aur current node ki value add karo.',P:[[['a','b'],'g']],N:{a:'y'},lab:{l:'−10',b:'4'},up:['a','r','return 8'],eq:['return = nodeValue + max(leftBest, rightBest)','= 4 + max(−10, 4) = 8'],dim:1});
+F('Two decisions',{say:'Decision 1: dono sides jodo (complete path).',P:[[['l','a','b'],'m']],eq:['candidate = leftBest + nodeValue + rightBest','−10 + 4 + 4 = −2   (dono sides)'],N:{a:'y'},dim:1});
+F('Two decisions',{say:'Decision 2: parent ko sirf ek side do. Complete path = dono side; returned path = ek side.',P:[[['a','b'],'g'],[['l','a','b'],'m']],eq:['return = nodeValue + max(leftBest, rightBest)','4 + max(−10, 4) = 8   (ek side)'],N:{a:'y'},dim:1});
+F('Process root 3',{say:'Left subtree 8 deta hai, right leaf 5 deta hai.',P:[[BP,'m']],eq:['candidate = 8 + 3 + 5 = 16','globalBest = 16'],N:{r:'y'},dim:1});
+F('Process root 3',{say:'Return alag cheez hai. Root ka parent nahi hai, isliye 11 answer nahi — 16 hi answer hai.',P:[[['r','a','b'],'g']],eq:['return = 3 + max(8, 5) = 11','Candidate 16 ≠ returned 11'],N:{r:'y'},dim:1});
+F('Optimal path',{say:'Is path me −10 nahi hai.',P:[[BP,'g']],eq:['4 + 4 + 3 + 5 = 16','Maximum Leaf-to-Leaf Path Sum = 16']});
+[['Pehle base case: leaf apni value return karta hai, ans update nahi hota.',li('if(root->left==NULL && root->right==NULL)return root->data;')+1,LN.leaf,[]],
+['Left subtree solve karo (sirf tab jab left child ho).',li('ll=find(root->left);')+1,li('ll=find(root->left);'),[]],
+['Right subtree solve karo. INT_MIN ka matlab "is side me kuch nahi".',li('rr=find(root->right);')+1,li('rr=find(root->right);'),[]],
+['Dono sides hain toh candidate banao aur ans update karo.',LN.two+1,LN.two,['candidate = leftBest + nodeValue + rightBest']],
+['Parent ko sirf ek best downward path return karo.',li('return root->data+max(ll,rr);')+2,li('return root->data+max(ll,rr);'),['return = nodeValue + max(leftBest, rightBest)']],
+['Wrapper: find chalao; ans kabhi update na hua ho toh -1 (koi valid path nahi).',CODE.length,LN.none,['Maximum Leaf-to-Leaf Path Sum = 16']]].forEach(([s,lim,hl,eq])=>F('Into the code',{say:s,code:lim,hl,P:[[BP,'g']],dim:1,eq}));
+F('Complexity',{say:'n = nodes ki sankhya.',eq:['Time: O(n)','Auxiliary space: O(h)'],ex:'<div class="k">Har node constant baar process hota hai → <b>O(n)</b>. Recursive call stack height h tak jata hai: balanced me ~O(log n), skewed me O(n). Ye O(1) nahi hai. Tree ki apni memory alag hoti hai (auxiliary me nahi gini jati).</div>'});
+F('Final recap',{say:'Har node par do cheezein socho:',eq:['1) candidate = leftBest + nodeValue + rightBest','2) return = nodeValue + max(leftBest, rightBest)','Maximum Leaf-to-Leaf Path Sum = 16'],P:[[BP,'g']],ex:'<textarea id="ta" placeholder="Explain it yourself: dono formulas me kya fark hai?"></textarea><button onclick="$(\'ma\').classList.toggle(\'hid\')">Show model answer</button><div id="ma" class="k hid">Candidate dono sides jodkar complete leaf-to-leaf path banata hai aur global answer update karta hai. Return sirf ek side + node deta hai, taaki parent path ko aage badha sake.</div>'});
+const CASES=[['Main example',MAIN,'Yehi primary example hai: node (4) pe candidate −2, return 8; root pe candidate 16, return 11.'],['A · Empty tree',null,'Koi leaf hi nahi, isliye koi valid path nahi. 0 return karna galat hoga.'],['B · Single leaf',n(7),'Ek hi leaf hai; do distinct leaves chahiye. Koi valid path nahi.'],['C · Two leaves',n(1,n(2),n(3)),'2 + 1 + 3 = 6. Sabse simple valid case.'],['D · All negative',n(-5,n(-2),n(-3)),'−2 + (−5) + (−3) = −10. Max ko 0 se shuru karte toh 0 aata, jo galat hai.'],['E · Zeros',n(0,n(0),n(0)),'Answer 0. Zero valid value hai, "missing" nahi.'],['F · One child only',n(5,n(2,n(1))),'Sirf ek leaf hai. Missing child ko fake leaf ya 0 banakar path banana galat hai.'],['G · Chain + 2 leaves',n(1,n(2,n(3),n(4))),'Do leaves 3 aur 4: 3 + 2 + 4 = 9. Root ke upar ka node kuch add nahi karta.'],['H · Negative beside positive',n(4,n(-8),n(6)),'−8 + 4 + 6 = 2. Negative contribution bhi valid hai jab path leaf tak jaana ho.'],['I · Best inside a subtree',n(1,n(2,n(50),n(50)),n(-100)),'Andar ka path 102 hai, root candidate sirf −47. best ko replace nahi, compare karte hain.'],['J · Duplicate values',n(2,n(2,n(2),n(2)),n(2)),'Sab values 2 hain, par nodes alag hain. Isliye node ID/reference use hota hai, sirf value nahi.'],['K · Overflow',n(2000000000,n(2000000000),n(2000000000)),'6,000,000,000 int me nahi aata; isliye long long. Constraints ke hisaab se type chuno.'],['L · Skewed tree',n(1,n(2,n(3,n(4,n(5),n(6))))),'Depth O(n) → recursion stack overflow ho sakta hai. Zarurat ho toh iterative postorder use karo; yahan recursive rakha.']];
+const QZ=[['Kya har internal-node-to-internal-node path valid hai?',['Haan','Nahi — dono endpoints leaf hone chahiye'],1,'Valid path ke dono ends leaf hote hain.'],['Kya leaf complete leaf-to-leaf answer return karta hai?',['Haan','Nahi — sirf downward value deta hai, best = none'],1,'Ek akela leaf path nahi banata.'],['Candidate ke liye left aur right dono kyun chahiye?',['Complete path ke do leaf endpoints chahiye, har side se ek','Code chhota hota hai','Parent ko dono chahiye'],0,'Do alag leaves = do sides.'],['Parent ko sirf ek downward path kyun milta hai?',['Parent ek continuous path aage badha sakta hai; dono dene se branch ho jati hai','Memory bachti hai','Left hamesha chhota hota hai'],0,'Branching path, path nahi hota.'],['Us node ka candidate kya hai jiske children −10 aur 4 hain (value 4)?',['−2','8','16','4'],0,'−10 + 4 + 4 = −2.'],['Wahi node parent ko kya return karta hai?',['−2','8','16','12'],1,'4 + max(−10, 4) = 8.'],['Root 3 par candidate kya hai?',['11','16','8','15'],1,'8 + 3 + 5 = 16.'],['Agar tree me do se kam leaves hon?',['0 return karo','Koi valid path nahi (is code me -1 return)','−∞ ko 0 maano','Fake leaf banao'],1,'Number invent nahi karte.']];
+// ---------- rendering ----------
+let cur=null,tab='learn',learn=0,run=0,rev=false,playing=false,timer=null,RT=MAIN,RUN=simulate(MAIN),PAR={};
+const find=(t,id)=>!t?null:t.id==id?t:find(t.l,id)||find(t.r,id);
+function lay(t){const pos={},ed=[],ns=[];let i=0,md=0;(function w(x,d,p){if(!x)return;w(x.l,d+1,x);pos[x.id]=[i++,d];ns.push(x);if(p)ed.push([p.id,x.id]);md=Math.max(md,d);w(x.r,d+1,x)})(t,0,null);return{pos,ed,ns,cnt:i,md}}
+function draw(t,S){S=S||{};const svg=$('tr');cur=t;$('badge').textContent='Kisi node par click karo';
+ if(!t){svg.setAttribute('viewBox','0 0 400 150');svg.innerHTML='<text x="200" y="85" fill="#9fb8d8" font-size="26" text-anchor="middle">nullptr (empty tree)</text>';return}
+ const L=lay(t),big=L.cnt>9,DX=big?60:100,DY=big?96:116,R=big?21:38,M=R+30,W=Math.max(320,(L.cnt-1)*DX+2*M),H=L.md*DY+2*M;svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+ const P=id=>[M+L.pos[id][0]*DX+(W-(L.cnt-1)*DX-2*M)/2,M+L.pos[id][1]*DY],Ps=S.P||[];
+ const pc=id=>{for(const[p,k]of Ps)if(p.includes(id))return k},ec=(a,b)=>{for(const[p,k]of Ps)for(let j=1;j<p.length;j++)if((p[j-1]==a&&p[j]==b)||(p[j-1]==b&&p[j]==a))return k};let h='';
+ L.ed.forEach(([a,b])=>{const A=P(a),B=P(b),k=ec(a,b),d=S.dim&&!k;h+=`<line x1="${A[0]}" y1="${A[1]}" x2="${B[0]}" y2="${B[1]}" stroke="${k?COL[k]:'#1f5f86'}" stroke-width="${k?(big?7:11):(big?3:6)}" stroke-linecap="round" opacity="${d?.25:1}"${k?` style="filter:drop-shadow(0 0 6px ${COL[k]})"`:''}/>`});
+ L.ns.forEach(x=>{const[X,Y]=P(x.id),k=(S.N&&S.N[x.id])||pc(x.id),d=S.dim&&!k,col=COL[k||'cy'];
+  h+=`<g data-id="${x.id}" style="cursor:pointer" opacity="${d?.3:1}"><circle cx="${X}" cy="${Y}" r="${R}" fill="${col}33" stroke="${col}" stroke-width="4" style="filter:drop-shadow(0 0 8px ${col})"/><text x="${X}" y="${Y+R*.33}" font-size="${R*.9}" font-weight="800" fill="#fff" text-anchor="middle">${fm(x.v)}</text>`;
+  if(S.lab&&S.lab[x.id])h+=`<text x="${X}" y="${Y+R+20}" font-size="${big?14:20}" font-weight="700" fill="${col}" text-anchor="middle">${S.lab[x.id]}</text>`;h+='</g>'});
+ if(S.up&&L.pos[S.up[0]]&&L.pos[S.up[1]]){const A=P(S.up[0]),B=P(S.up[1]),mx=(A[0]+B[0])/2,my=(A[1]+B[1])/2,dx=B[0]-A[0],dy=B[1]-A[1],l=Math.hypot(dx,dy),ox=-dy/l*28,oy=dx/l*28,sg=ox>0?-1:1,ang=Math.atan2(dy,dx)*180/Math.PI+90;
+  h+=`<g transform="translate(${mx+ox*sg},${my+oy*sg}) rotate(${ang})"><polygon points="0,-20 -15,14 15,14" fill="${COL.g}"/></g><text x="${mx+ox*sg*2.4}" y="${my+oy*sg*2.4}" font-size="18" font-weight="700" fill="${COL.g}" text-anchor="middle">${S.up[2]||''}</text>`}
+ svg.innerHTML=h}
+$('tr').onclick=e=>{const g=e.target.closest('[data-id]');if(!g||!cur)return;const x=find(cur,g.dataset.id);if(x)$('badge').textContent=`Node ${fm(x.v)} → ${!x.l&&!x.r?'Leaf (no children)':'Internal node'}`};
+function codeShow(lim,hl){const box=$('code');if(!lim){box.classList.add('hid');return}box.classList.remove('hid');const cd=$('cd');cd.innerHTML='';
+ CODE.slice(0,lim).forEach((l,i)=>{const d=document.createElement('div');d.className='cl'+(i==hl?' on':'');d.textContent=l[0]||' ';d.onclick=()=>{codeShow(lim,i);explain(i)};cd.appendChild(d)});if(hl>=0)explain(hl)}
+function explain(i){$('le').textContent=CODE[i]&&CODE[i][1]?CODE[i][1]:'Ye block ka braces/blank hissa hai: upar wali line ka scope band karta hai.';const on=$('cd').children[i];if(on)on.scrollIntoView({block:'nearest'})}
+function setProg(i,N,t){$('pb').style.width=((i+1)/N*100)+'%';$('pt').textContent=t}
+function showL(i){learn=Math.max(0,Math.min(FR.length-1,i));rev=false;paintL()}
+function paintL(){const f=FR[learn],r=rev&&f.rev;draw(f.tree=='big'?BIG:MAIN,{P:r?f.rev.P:f.P,N:f.N,dim:f.dim,lab:f.lab,up:f.up});
+ $('ti').textContent=f.t;$('say').textContent=r?f.rev.say:f.say;const eq=$('eq');eq.innerHTML='';(r?f.rev.eq:f.eq||[]).forEach(s=>{const d=document.createElement('div');d.textContent=s;eq.appendChild(d)});
+ $('ex').innerHTML=f.ex||'';$('rv').classList.toggle('hid',!f.rev||rev);codeShow(f.code||0,f.code?f.hl:-1);setProg(learn,FR.length,`Stage ${learn+1} / ${FR.length} · ${f.t}`)}
+$('rv').onclick=()=>{rev=true;paintL()};
+function sayR(e,gb){const v=fm(e.v);if(e.k=='enter')return`find(${v}) call hua. Pehle children se results maangte hain.`;if(e.k=='null')return`${e.side} child nahi hai → if guard recursion skip karta hai. Ye real leaf nahi hai aur 0-value node bhi nahi.`;
+ if(e.k=='done')return e.best===null?'Koi valid leaf-to-leaf path nahi: ans update hua hi nahi, code -1 return karta hai.':`Final answer = ${fm(e.best)}`;if(e.kind=='leaf')return`Leaf hai → down = ${v}. Ye sirf downward value hai, ans nahi badla (akela leaf path nahi).`;
+ if(e.kind=='two')return`candidate = ${fm(e.a)} + ${v} + ${fm(e.b)} = ${fm(e.cand)} (dono sides). return = ${v} + max(${fm(e.a)}, ${fm(e.b)}) = ${fm(e.down)} (sirf ek side). ans = max(ans, ${fm(e.cand)}) = ${fm(gb)}.`;
+ return`Sirf ek child hai → candidate nahi banta. down = ${v} + ${fm(e.a)} = ${fm(e.down)}; ans nahi badla.`}
+function showR(i){const E=RUN.ev;run=Math.max(0,Math.min(E.length-1,i));const e=E[run],st=[],rets={};let gb=null,lr=null,rr=null;
+ for(let k=0;k<=run;k++){const q=E[k];if(q.k=='enter')st.push(q.id);if(q.k=='ret'){st.pop();rets[q.id]=q;if(q.kind=='two'&&(gb===null||q.cand>gb))gb=q.cand}}
+ const N={},lab={};st.forEach(id=>{N[id]='cy';lab[id]='waiting'});for(const id in rets){N[id]='g';lab[id]='↑'+fm(rets[id].down)}
+ let P=[],up=null,phase='Done';if(e.k!='done'){N[e.id]='y';lab[e.id]=e.k=='ret'?'↑'+fm(e.down):e.k=='null'?'nullptr?':'current';phase=e.k=='enter'?'Entering':e.k=='null'?'Calculating (missing child)':'Returning';
+  if(e.k=='ret'){P=e.kind=='two'?[[e.d,'g'],[e.c,'m']]:[[e.d,'g']];if(PAR[e.id])up=[e.id,PAR[e.id],'return '+fm(e.down)]}}
+ draw(RT,{P,N,lab,up,dim:1});$('ti').textContent=e.k=='done'?'Result':'Step: '+phase;$('say').textContent=sayR(e,gb);$('eq').innerHTML='';
+ const T=$('state');const row=(a,b)=>`<tr><td>${a}</td><td><b>${b}</b></td></tr>`,isR=e.k=='ret',two=isR&&e.kind=='two';
+ T.innerHTML=row('Current node',e.k=='done'?'—':fm(e.v))+row('Left result',isR&&e.kind!='leaf'?fm(e.a):'—')+row('Right result',two?fm(e.b):'—')+row('Candidate',two?fm(e.cand):'none')+row('Returned down',isR?fm(e.down):'—')+row('ans (global)',gb===null?'none':fm(gb));
+ const S=$('stack');S.innerHTML='<div class="hint">Call stack (top first):</div>';st.slice().reverse().forEach((id,j)=>{const d=document.createElement('div');d.className='st';d.textContent=`find(${fm(find(RT,id).v)}) — ${j==0&&e.k!='ret'?phase:'Waiting for child'}`;S.appendChild(d)});
+ codeShow(CODE.length,LN[e.k=='ret'?e.kind:e.k=='null'?'null'+e.side:e.k=='done'&&e.best===null?'none':e.k]);setProg(run,E.length,`Run ${run+1} / ${E.length} · ${phase}`)}
+function setCase(j){RT=CASES[j][1];RUN=simulate(RT);PAR={};(function w(x){if(!x)return;[x.l,x.r].forEach(y=>{if(y){PAR[y.id]=x.id;w(y)}})})(RT);
+ $('why').innerHTML='';const b=document.createElement('div');b.textContent=CASES[j][2]+'  Expected: '+(RUN.best===null?'No valid leaf-to-leaf path (code returns −1)':fm(RUN.best))+(j==1?'  ⚠ Is code me empty tree par find(root) crash karta hai: null check find se pehle chahiye.':'');$('why').appendChild(b);showR(0)}
+function setTab(t){stop();tab=t;document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t==t));
+ const q=t=='quiz';$('quiz').classList.toggle('hid',!q);$('vis').classList.toggle('hid',q);$('info').classList.toggle('hid',q);$('bar').classList.toggle('hid',q);$('pb').parentNode.classList.toggle('hid',q);$('pt').classList.toggle('hid',q);
+ $('runbox').classList.toggle('hid',t!='run');['ti','say','eq','ex'].forEach(i=>$(i).classList.toggle('hid',t=='run'&&(i=='eq'||i=='ex')));$('rv').classList.add('hid');
+ if(t=='learn')showL(learn);else if(t=='run'){$('ex').innerHTML='';setCase($('cs').selectedIndex)}else{codeShow(0);quiz()}}
+function step(d){if(tab=='learn')showL(learn+d);else if(tab=='run')showR(run+d)}
+function atEnd(){return tab=='learn'?learn>=FR.length-1:run>=RUN.ev.length-1}
+function stop(){playing=false;clearInterval(timer);$('pp').textContent='▶ Play'}
+function play(){if(atEnd()){tab=='learn'?showL(0):showR(0)}playing=true;$('pp').textContent='⏸ Pause';clearInterval(timer);timer=setInterval(()=>{if(atEnd())stop();else step(1)},3800/+$('sp').value)}
+$('pp').onclick=()=>playing?stop():play();$('pv').onclick=()=>{stop();step(-1)};$('nx').onclick=()=>{step(1)};$('rp').onclick=()=>{stop();tab=='learn'?showL(0):showR(0);play()};$('rs').onclick=()=>{stop();tab=='learn'?showL(0):showR(0)};$('sp').onchange=()=>{if(playing)play()};
+document.onkeydown=e=>{if(/TEXTAREA|SELECT/.test(e.target.tagName))return;if(e.key=='ArrowRight')step(1);if(e.key=='ArrowLeft')step(-1);if(e.key==' '&&e.target.tagName!='BUTTON'){e.preventDefault();$('pp').click()}};
+function quiz(){const q=$('quiz');q.innerHTML='<h2>Practice Quiz</h2>';let sc=0,dn=0;const tot=document.createElement('p');tot.className='hint';q.appendChild(tot);
+ QZ.forEach(([t,o,a,x],i)=>{const d=document.createElement('div');d.className='q k';const h=document.createElement('b');h.textContent=(i+1)+'. '+t;d.appendChild(h);const fb=document.createElement('div');fb.className='hint';
+  o.forEach((s,j)=>{const b=document.createElement('button');b.textContent=s;b.onclick=()=>{d.querySelectorAll('button').forEach((z,k)=>{z.disabled=true;if(k==a)z.classList.add('ok')});if(j==a)sc++;else b.classList.add('bad');dn++;fb.textContent=(j==a?'✓ Sahi! ':'✗ Galat. ')+x;tot.textContent=`Score: ${sc} / ${dn} answered`};d.appendChild(b)});d.appendChild(fb);q.appendChild(d)});
+ const r=document.createElement('button');r.textContent='Retry quiz';r.onclick=quiz;q.appendChild(r)}
+CASES.forEach((c,i)=>{const o=document.createElement('option');o.textContent=c[0];o.value=i;$('cs').appendChild(o)});$('cs').onchange=()=>{stop();setCase($('cs').selectedIndex)};
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>setTab(b.dataset.t));setTab('learn');
+</script></body></html>
